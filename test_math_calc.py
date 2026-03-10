@@ -1,4 +1,5 @@
 from math_calc import add
 
-def test_add():
+def te
+st_add():
   assert add(1,2)==3
