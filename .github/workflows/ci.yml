@@ -1,22 +1,25 @@
-name: My First CI Pipeline  # 给这条流水线起个霸气的名字
+name: My First CI Pipeline
 
-on: [push]  # 触发条件：只要有人往仓库 push (推送) 代码，就立刻启动！
+on: [push]
 
 jobs:
-  run-tests:                 # 这是一个任务区块，名字叫 run-tests
-    runs-on: ubuntu-latest   # 重点：向 GitHub 申请一台最新的 Ubuntu Linux 虚拟服务器
+  run-tests:
+    runs-on: ubuntu-latest
     
-    steps:                   # 在这台服务器上按顺序执行以下步骤：
+    steps:
       - name: 1. 下载我的代码
-        uses: actions/checkout@v4  # 使用官方写好的动作，把你的代码拉取到服务器上
+        uses: actions/checkout@v4
 
       - name: 2. 安装 Python 环境
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'   # 指定使用 Python 3.10 版本
+          python-version: '3.10'
 
-      - name: 3. 安装测试工具
-        run: pip install pytest    # 在服务器终端运行命令，安装自动化测试库 pytest
+      - name: 3. 安装工具 (pytest 和 flake8)
+        run: pip install pytest flake8   # 这里新增了 flake8
 
-      - name: 4. 运行自动化测试
-        run: pytest                # 执行测试命令！
+      - name: 4. 运行代码规范检查 (Lint)
+        run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics # 检查致命的语法错误
+
+      - name: 5. 运行自动化测试
+        run: pytest
